@@ -29,7 +29,8 @@ services:
   filebeat:
     image: "docker.elastic.co/beats/filebeat:7.17.0"
     user: root
-    volumes:                                                 -/home/emadmin/ELK/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    volumes: 
+      -/home/emadmin/ELK/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - /var/lib/docker:/var/lib/docker:ro
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -265,4 +266,5 @@ Password – admin
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/import-dashboard.png)
 - Select the Prometheus data source configured earlier
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/metrics.png)
+
 
