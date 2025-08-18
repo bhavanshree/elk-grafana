@@ -1,4 +1,4 @@
-### ELK Setup
+## ELK Setup
 - Use the below mentioned docker-compose.yml to setup the elk.
 ```
 version: '3.8'
@@ -105,4 +105,159 @@ Password: ElastIcadMin
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/10b26f955c12365b7a03ebd08bf21aa61f1ed0a8/images/setting.png)
   - To view the logs, navigate to the **Stream** section under **Logs** and search using the container name.
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/10b26f955c12365b7a03ebd08bf21aa61f1ed0a8/images/stream-logs.png)
+  - **Syntax**: container.name: container-name
 
+## Monitoring setup
+## Prometheus and Grafana Setup:
+- Use the below-mentioned docker-compose.yml file and prometheus.yml file for setting up the Monitoring-Stack.
+docker-compose.yml
+```
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Set Grafana admin password
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - 9100:9100
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+```
+```
+docker-compose up -d
+```
+**Prometheus.yml**
+```
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  query_log_file: /prometheus/query.log
+
+scrape_configs:
+
+  - job_name: 'Dev Web Server'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['<Web Server NodeExporter_Host>:9100']
+
+  - job_name: 'Dev API Server'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['<API Server NodeExporter_Host>:9100']
+
+  - job_name: 'Dev Monitoring Server'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets: ['<Monitoring Server NodeExporter_Host>:9100']
+```
+> [!NOTE]
+> In a setup with three servers, one server hosts the full stack—Grafana, Prometheus, and Node Exporter—while the other two servers run only Node Exporter. These exporters collect system metrics and send them to Prometheus, which can then be visualized in Grafana.
+
+## Node Exporter Setup:
+- Use the below-mentioned docker-compose.yml file for setting up the node exporter service.
+```
+version: '3.8'
+
+networks:
+  monitoring:
+    driver: bridge
+
+
+volumes:
+  prometheus_data: {}
+  grafana-data:
+    driver: local
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - 9100:9100
+    networks:
+      - monitoring
+```
+```
+docker-compose up -d
+```
+## Grafana setup in the application
+Log in using the default credentials:
+```
+Username – admin
+Password – admin
+
+```
+- In the home section, choose the dashboard
+ ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/dashboard.png)
+- Go to the open menu and click **Add new connection**
+ ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/add-new-connnection.png)
+- Search and choose **Prometheus**.
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/Promethesus.png)
+- Click **Add new data source**
+  Set the url to http://prometheus:9090 (service named prometheus)
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/add-new-datasource.png)
+
+- Click **Save&test**
+- Go to the open menu and click **Dashboards**.
+- Go to the + icon on the Top right corner and click the **Import dashboard**.
+- Enter **1860** in the Find and import dashboards for common applications at [grafana.com/dashboards](grafana.com/dashboards) to import the node-exporter dashboard.
+
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/import-dashboard.png)
+- Select the Prometheus data source configured earlier
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/metrics.png)
