@@ -102,4 +102,7 @@ Password: ElastIcadMin
   - To view the logs, navigate to the **Logs** section under **Observability**.
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/stream-section.png)
   - Click on **Settings** in the top-right corner of the container, update the current log indices, and then click **Apply** at the bottom to save the changes.
-    
+    ![image alt](https://github.com/bhavanshree/elk-grafana/blob/10b26f955c12365b7a03ebd08bf21aa61f1ed0a8/images/setting.png)
+  - To view the logs, navigate to the **Stream** section under **Logs** and search using the container name.
+    ![image alt](https://github.com/bhavanshree/elk-grafana/blob/10b26f955c12365b7a03ebd08bf21aa61f1ed0a8/images/stream-logs.png)
+
