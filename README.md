@@ -1,4 +1,4 @@
-## ELK Setup
+# ELK Setup
 - Use the below mentioned docker-compose.yml to setup the elk.
 ```
 version: '3.8'
@@ -95,19 +95,23 @@ Password: ElastIcadMin
   - Go to the stack management in the left side and click the index pattern under the Kibana section
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/kibana-home.png)
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/index.png)
+
   - Then click on **Create index pattern** to set up a new index pattern.
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/create-index.png)
+
   - In the **Name** field, enter an appropriate name for the index, and select the corresponding **Timestamp** field..
   - After that the index pattern will be created.
   - To view the logs, navigate to the **Logs** section under **Observability**.
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/stream-section.png)
+
   - Click on **Settings** in the top-right corner of the container, update the current log indices, and then click **Apply** at the bottom to save the changes.
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/10b26f955c12365b7a03ebd08bf21aa61f1ed0a8/images/setting.png)
+
   - To view the logs, navigate to the **Stream** section under **Logs** and search using the container name.
     ![image alt](https://github.com/bhavanshree/elk-grafana/blob/10b26f955c12365b7a03ebd08bf21aa61f1ed0a8/images/stream-logs.png)
   - **Syntax**: container.name: container-name
 
-## Monitoring setup
+# Monitoring setup
 ## Prometheus and Grafana Setup:
 - Use the below-mentioned docker-compose.yml file and prometheus.yml file for setting up the Monitoring-Stack.
 docker-compose.yml
@@ -261,3 +265,4 @@ Password – admin
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/import-dashboard.png)
 - Select the Prometheus data source configured earlier
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/metrics.png)
+
