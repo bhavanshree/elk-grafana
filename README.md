@@ -1,3 +1,129 @@
+## Services and Port
+| Server        | Service             | Port  |
+|---------------|---------------------|-------|
+| 130.78.204.143 | Frontend            | 9090  |
+|               | Keycloak-uat        | 8443  |
+|               | Node-exporter       | 9100  |
+| 130.78.204.115 | Result              | 7772  |
+|               | Order               | 8084  |
+|               | Registration        | 8082  |
+|               | Gateway             | 7791  |
+|               | Acknowledge         | 8087  |
+|               | Userprofile         | 8081  |
+|               | Testbase            | 8086  |
+|               | Patient             | 8083  |
+|               | Facility            | 8085  |
+|               | Apigateway          | 7790  |
+|               | Node-exporter       | 9100  |
+| 130.78.204.144 | Elk-elasticsearch-1 | 9200  |
+|               | Elk-kibana-1        | 5601  |
+|               | Redis-prod          | 16370 |
+|               | Grafana             | 3000  |
+|               | Prometheus          | 9090  |
+|               | Node-exporter       | 9100  |
+|               | Keycloak-db         | 15432 |
+| 130.78.204.142 | Oracle              | 1521  |
+
+## Application-version
+| Application   | Version |
+|---------------|---------|
+| Docker        | 28.0.1  |
+| Keycloak      | 26.0.5  |
+| Postgres      | 16      |
+| Redis         | 5.0.14  |
+| Elasticsearch | 7.17.0  |
+| Kibana        | 7.17.0  |
+| Filebeat      | 7.17.0  |
+
+
+## Redis setup
+```
+docker run -d   --name redis-stage  -p 16370:6379   -v ./redis.conf:/usr/local/etc/redis/redis.conf   redis:5.0.14 redis-server /usr/local/etc/redis/redis.conf
+```
+## Dedalus help
+- Set up an Nginx folder along with its configuration.
+-  Since that folder doesn’t have an index.html, update the Nginx configuration accordingly.
+```
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    server {
+        listen 80;
+        server_name localhost;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location / {
+            autoindex on;  # Optional: shows folder contents if no index
+            add_header Access-Control-Allow-Origin *;
+            add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS';
+            add_header Access-Control-Allow-Headers 'Origin, Content-Type, Accept';
+        }
+
+    }
+}
+```
+- Created a Dockerfile for the folder.
+**Dockerfile**
+```
+FROM nginx:alpine
+RUN rm -rf /usr/share/nginx/html/*
+COPY . /usr/share/nginx/html/
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+CMD ["nginx", "-g", "daemon off;"]
+```
+- Once the Docker file is created, build the image
+```
+docker build -t <image_name>:v1 -no-cache .
+```
+- Push into the Docker Hub
+```
+docker push <image_name>:v1
+```
+-  Docker run Commands for the server
+```
+docker run -d --name dedalus-help -p <Expose-port>:80 <image-name>:v1
+```
+**Example Outpit**
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/5e539010568c766c168318736462691950e65a3c/images/help-Index.png)
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/5e539010568c766c168318736462691950e65a3c/images/result.png)
+
+## Keycloak setup
+**Postgres DB(Keycloak):**
+- Pull the Postgres Image.
+```
+docker pull postgres:16
+```
+- Create a Docker Volume.
+```
+docker volume create keycloak-data
+```
+- Run the postgres data as a container.
+```
+docker run -d   --name keycloak-db --restart=always   -e POSTGRES_USER=<Username>  -e POSTGRES_PASSWORD=<Password>  -e POSTGRES_DB=<DB Name>   -p <Expose Port>:5432   -v keycloak-data:/var/lib/postgresql/data   postgres:16
+```
+**Keycloak Setup(app):**
+- Pull the Keycloak Docker Image. 
+```
+docker pull quay.io/keycloak/keycloak:26.0.5
+```
+- Run the keycloak as a container.
+```
+docker run -d --name keycloak --restart=always -p 8443:8080 -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin -e KC_DB=postgres -e KC_DB_URL=jdbc:postgresql://<DB_Host>:<DB_Port/<DB_Name> -e KC_DB_USERNAME=<DB_Username> -e KC_DB_PASSWORD=<DB_Password> quay.io/keycloak/keycloak:26.0.5 start-dev
+```
+
+
+
+
+
 # ELK Setup
 - Use the below mentioned docker-compose.yml to setup the elk.
 ```
@@ -266,5 +392,6 @@ Password – admin
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/import-dashboard.png)
 - Select the Prometheus data source configured earlier
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/metrics.png)
+
 
 
