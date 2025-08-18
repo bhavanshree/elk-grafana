@@ -39,7 +39,7 @@ volumes:
 
 - I ‘ve attached the screenshot for the file structure
 
-![image alt](https://github.com/bhavanshree/elk-grafana/blob/324291bf36ea490c54e5977e0a2c0687a27e5060/images/Elk-folder.png)
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/324291bf36ea490c54e5977e0a2c0687a27e5060/images/Elk-folder.png)
 - Execute this command in the ELK directory.
 ```
 docker-compose up -d
@@ -76,3 +76,30 @@ chown root:root filebeat.yml
 > [!NOTE]
 > To run Filebeat independently on a different server, the filebeat.yml configuration file is required on that server. In a setup with three servers—one hosting the full ELK stack and the other two running only Filebeat—each Filebeat instance connects to the ELK server to forward container logs.
 
+  ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/filebeat-folder.png)
+
+- Use the below command to run the filebeat container.
+```
+docker run -d --name=filebeat   --user=root   --volume="/var/lib/docker/containers:/var/lib/docker/containers:ro"   --volume="/var/run/docker.sock:/var/run/docker.sock:ro"   --volume="$(pwd)/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"   docker.elastic.co/beats/filebeat:7.17.0 filebeat -e -strict.perms=false -c /usr/share/filebeat/filebeat.yml
+```
+
+### ELK setup in application
+
+Open the browser  and search :<Elasticsearch_Host>:5601
+```
+User name: elastic
+Password: ElastIcadMin
+```
+- Steps to follow:
+
+  - Go to the stack management in the left side and click the index pattern under the Kibana section
+    ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/kibana-home.png)
+    ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/index.png)
+  - Then click on **Create index pattern** to set up a new index pattern.
+    ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/create-index.png)
+  - In the **Name** field, enter an appropriate name for the index, and select the corresponding **Timestamp** field..
+  - After that the index pattern will be created.
+  - To view the logs, navigate to the **Logs** section under **Observability**.
+    ![image alt](https://github.com/bhavanshree/elk-grafana/blob/99e26f2e2a38e13a5886f18268b5eda6342a5ef7/images/stream-section.png)
+  - Click on **Settings** in the top-right corner of the container, update the current log indices, and then click **Apply** at the bottom to save the changes.
+    
