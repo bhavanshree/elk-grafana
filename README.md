@@ -1,28 +1,32 @@
+## Prerequisites Installation:
+  - [Docker](https://docs.docker.com/engine/install/rhel/)
+
 ## Services and Port
-| Server        | Service             | Port  |
-|---------------|---------------------|-------|
-| 130.78.204.143 | Frontend            | 9090  |
-|               | Keycloak-uat        | 8443  |
-|               | Node-exporter       | 9100  |
-| 130.78.204.115 | Result              | 7772  |
-|               | Order               | 8084  |
-|               | Registration        | 8082  |
-|               | Gateway             | 7791  |
-|               | Acknowledge         | 8087  |
-|               | Userprofile         | 8081  |
-|               | Testbase            | 8086  |
-|               | Patient             | 8083  |
-|               | Facility            | 8085  |
-|               | Apigateway          | 7790  |
-|               | Node-exporter       | 9100  |
-| 130.78.204.144 | Elk-elasticsearch-1 | 9200  |
-|               | Elk-kibana-1        | 5601  |
-|               | Redis-prod          | 16370 |
-|               | Grafana             | 3000  |
-|               | Prometheus          | 9090  |
-|               | Node-exporter       | 9100  |
-|               | Keycloak-db         | 15432 |
-| 130.78.204.142 | Oracle              | 1521  |
+| Service             | Port  |
+|---------------------|-------|
+| Frontend            | 9090  |
+| Keycloak-uat        | 8443  |
+| Node-exporter       | 9100  |
+| Result              | 7772  |
+| Order               | 8084  |
+| Registration        | 8082  |
+| Gateway             | 7791  |
+| Acknowledge         | 8087  |
+| Userprofile         | 8081  |
+| Testbase            | 8086  |
+| Patient             | 8083  |
+| Facility            | 8085  |
+| Apigateway          | 7790  |
+| Node-exporter       | 9100  |
+| Elk-elasticsearch-1 | 9200  |
+| Elk-kibana-1        | 5601  |
+| Redis-prod          | 16370 |
+| Grafana             | 3000  |
+| Prometheus          | 9090  |
+| Node-exporter       | 9100  |
+| Keycloak-db         | 15432 |
+| Oracle              | 1521  |
+
 
 ## Application-version
 | Application   | Version |
@@ -392,6 +396,7 @@ Password – admin
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/import-dashboard.png)
 - Select the Prometheus data source configured earlier
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/metrics.png)
+
 
 
 
