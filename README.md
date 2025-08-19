@@ -20,6 +20,7 @@
 | Node-exporter       | 9100  |
 | Elk-elasticsearch-1 | 9200  |
 | Elk-kibana-1        | 5601  |
+| Dedalus-help        | 7767  |
 | Redis-prod          | 16370 |
 | Grafana             | 3000  |
 | Prometheus          | 9090  |
@@ -396,6 +397,7 @@ Password – admin
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/import-dashboard.png)
 - Select the Prometheus data source configured earlier
   ![image alt](https://github.com/bhavanshree/elk-grafana/blob/fc7efe2f60167eaa939d55a41a7e3602aacdd50a/images/metrics.png)
+
 
 
 
